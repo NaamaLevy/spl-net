@@ -32,8 +32,9 @@ public class ConnectionsImpl<T> implements Connections<T>{
     public void send(String channel, T msg) {
         ConcurrentHashMap topicSubsMap= topicsMap.get(channel);
         if (topicSubsMap != null){
-           for()
-
+           for( Object sub : topicSubsMap.values()){
+               usersMap.get((Integer)sub).send(msg);
+           }
             }
     }
 
