@@ -6,9 +6,13 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ConnectionsImpl<T> implements Connections<T>{
 
     //fields
-    private ConcurrentHashMap<Integer, BlockingQueue> usersMap;
-    private ConcurrentHashMap<String, BlockingQueue> topicsMap;
+    private ConcurrentHashMap<Integer, ConcurrentHashMap<String,Integer>> usersMap;
+    private ConcurrentHashMap<String, ConcurrentHashMap<Integer,Integer>> topicsMap;
 
+    public ConnectionsImpl(){
+        usersMap = new ConcurrentHashMap<>();
+        usersMap = new ConcurrentHashMap<>();
+    }
     @Override
     public boolean send(int connectionId, T msg) {
         return false;
