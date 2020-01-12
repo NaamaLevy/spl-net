@@ -31,5 +31,9 @@ public class DataBase<T> {
     public ConcurrentHashMap<Integer, User> getUserMap() {
         return userMap;
     }
+    public synchronized void addUser(String userName, String password){
+        User newUser = new User(userName, password, nextid);
+        nextid++;
+    }
 }
 
