@@ -1,6 +1,7 @@
 package bgu.spl.net.srv;
 
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class DataBase<T> {
     //fields
@@ -8,10 +9,18 @@ public class DataBase<T> {
     private ConcurrentHashMap<String, ConcurrentHashMap<Integer, Integer>> topicsMap;
     private ConcurrentHashMap<Integer, ConnectionHandler<T>> clientsMap;
     private ConcurrentHashMap<Integer, User> userMap;
-    int nextid;
+    AtomicInteger nextid;
 
     private static class SingletonHolder {
         private static DataBase dataBase = new DataBase();
+    }
+
+    private DataBase(){
+        nextid = new AtomicInteger(0);
+        subscribersMap = new ConcurrentHashMap<>();
+        topicsMap = new ConcurrentHashMap<>();
+        clientsMap = new ConcurrentHashMap<>();
+        userMap = new ConcurrentHashMap<>();
     }
 
     public static DataBase getInstance(){ return SingletonHolder.dataBase;}
@@ -32,8 +41,9 @@ public class DataBase<T> {
         return userMap;
     }
     public synchronized void addUser(String userName, String password){
-        User newUser = new User(userName, password, nextid);
-        nextid++;
+        int id = nextid.get();
+        User newUser = new User(userName, password, id);
+        nextid.incrementAndGet();
     }
 }
 
