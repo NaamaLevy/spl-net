@@ -15,11 +15,11 @@ public class Frame {
             this.body = body;
         }
 
-        public void process(){
-        }
+    public HashMap<String, String> getHeaders() {
+        return headers;
+    }
 
-
-
+    public void process(){}
     }
 
 

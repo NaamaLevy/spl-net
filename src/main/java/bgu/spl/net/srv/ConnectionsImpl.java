@@ -7,23 +7,20 @@ import java.util.concurrent.locks.Lock;
 public class ConnectionsImpl<T> implements Connections<T> {
 
     //fields
-    private ConcurrentHashMap<Integer, ConcurrentHashMap<String, Integer>> subscribersMap;
-    private ConcurrentHashMap<String, ConcurrentHashMap<Integer, Integer>> topicsMap;
-    private ConcurrentHashMap<Integer, ConnectionHandler<T>> usersMap;
+    private DataBase DB;
     private final Object lock;
 
     public ConnectionsImpl() {
-        subscribersMap = new ConcurrentHashMap<>();
-        topicsMap = new ConcurrentHashMap<>();
-        usersMap = new ConcurrentHashMap<>();
+        DB = DataBase.getInstance();
         lock = new Object();
     }
 
     @Override
     public boolean send(int connectionId, T msg) {
-        if (!usersMap.containsKey(connectionId))
+        ConcurrentHashMap<Integer, ConnectionHandler<T>> clientsMap = DB.getClientsMap();
+        if (!clientsMap.containsKey(connectionId))
             return false;
-        ConnectionHandler ch = usersMap.get(connectionId);
+        ConnectionHandler ch = clientsMap.get(connectionId);
         //sync to prevent unregistering user while trying sending him a message
         synchronized (ch){
             if (ch != null){
@@ -41,7 +38,7 @@ public class ConnectionsImpl<T> implements Connections<T> {
         synchronized (topicSubsMap){
             if (topicSubsMap != null) {
                 for (Object sub : topicSubsMap.values()) {
-                    usersMap.get((Integer) sub).send(msg);
+                    clientsMap.get((Integer) sub).send(msg);
                 }
             }
         }
@@ -50,7 +47,7 @@ public class ConnectionsImpl<T> implements Connections<T> {
 
     @Override
     public void disconnect(int connectionId) {
-        if (usersMap.containsKey(connectionId)){
+        if (clientsMap.containsKey(connectionId)){
            for (ConcurrentHashMap<Integer, Integer> topicSubsMap : topicsMap.values()){
                //sync to prevent unregistering user from a topic's map while trying to send him a message
                synchronized (topicSubsMap){
@@ -67,9 +64,15 @@ public class ConnectionsImpl<T> implements Connections<T> {
                subscribersMap.remove(connectionId);
            }
             //sync to prevent unregistering user while trying to send him a message
-           synchronized (usersMap){
-               usersMap.remove(connectionId);
+           synchronized (clientsMap){
+               clientsMap.remove(connectionId);
            }
         }
     }
+    public synchronized void addUser(String userName, String password){
+        User newUser = new User(userName, password, nextid);
+
+        nextid++;
+    }
+
 }

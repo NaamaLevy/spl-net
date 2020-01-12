@@ -1,5 +1,6 @@
-package bgu.spl.net.api;
+package bgu.spl.net.srv;
 
+import bgu.spl.net.api.StompMessagingProtocol;
 import bgu.spl.net.impl.rci.Command;
 import bgu.spl.net.impl.stomp.*;
 import bgu.spl.net.srv.Connections;
@@ -10,6 +11,7 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.util.HashMap;
 import java.util.Scanner;
+import java.util.Vector;
 
 public class StompMessagingProtocolImpl<T> implements StompMessagingProtocol {
 
@@ -35,6 +37,8 @@ public class StompMessagingProtocolImpl<T> implements StompMessagingProtocol {
 
 
     public void process(String message) throws IOException {
+//        String[] messageVector = message.split("/n");
+//        String command = messageVector[0];
 
         Reader reader = new StringReader(message);
         BufferedReader bufferedMessage = new BufferedReader(reader);
