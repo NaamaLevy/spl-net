@@ -1,11 +1,15 @@
 package bgu.spl.net.srv;
 
+import java.util.LinkedList;
+import java.util.List;
+
 public class User {
     //fields
     String userName;
     String password;
     int id;
     ConnectionHandler CH;
+    List subscribedTo = new LinkedList<String>();
 
     //constructor
     public User(ConnectionHandler CH, int id){
@@ -40,4 +44,9 @@ public class User {
     public void setUserName(String userName) {
         this.userName = userName;
     }
+
+    public boolean isSubscribed(String topic) {return subscribedTo.contains(topic); }
+
+
 }
+

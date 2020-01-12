@@ -6,8 +6,8 @@ import java.util.HashMap;
 
 public class SENDframe extends Frame{
 
-    public SENDframe(String command, HashMap<String , String> headers, String body, DataBase DB) {
-        super(command,  headers, body, DB);;;
+    public SENDframe(String command, HashMap<String , String> headers, String body, DataBase DB, int connectionId) {
+        super(command,  headers, body, DB, connectionId);
     }
 
     public void process(){

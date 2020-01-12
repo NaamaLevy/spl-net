@@ -45,6 +45,7 @@ public abstract class BaseServer<T> implements Server<T> {
                         protocolFactory.get());
                         int id = DB.addUser(handler);
                 execute(handler);
+
             }
         } catch (IOException ex) {
         }

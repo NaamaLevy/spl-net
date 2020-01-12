@@ -18,7 +18,7 @@ public class DataBase<T> {
     private DataBase(){
         nextid = new AtomicInteger(0);
         subscribersMap = new ConcurrentHashMap<>();
-        topicsMap = new ConcurrentHashMap<>();
+        topicsMap = new ConcurrentHashMap<String, ConcurrentHashMap<Integer, Integer>>();
         clientsMap = new ConcurrentHashMap<>();
         userMap = new ConcurrentHashMap<>();
     }
@@ -60,5 +60,29 @@ public class DataBase<T> {
         }
         return false;
     }
+
+    public User getUserByName(String name){
+        return userMap.get(name);
+    }
+
+    public User getUserByConnectionId(int connectionId){
+
+       //TODO
+    }
+
+    public void addSubscriberToTopic(int connectionId, String topic){
+        User user = getUserByConnectionId(connectionId);
+        if(!user.isSubscribed()){
+            //TODO add him to the relevent topic's map
+        }
+    }
+
+    public void addTopicAsSubscribed(int connectionId, String topic){
+        //TODO should we hold Map <connectionId, User> as well?
+        //TODO add the topic to the user's map at subscribers Map
+    }
+
+
+
 }
 

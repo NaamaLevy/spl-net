@@ -6,13 +6,14 @@ import java.util.HashMap;
 
 public class Frame {
 
-        private final String command;
-        private final HashMap<String , String> headers;
-        private final String body;
+        protected final String command;
+        protected final HashMap<String , String> headers;
+        protected final String body;
         protected DataBase DB;
+        protected int connectionId;
 
 
-        public Frame(String command, HashMap<String , String> header, String body, DataBase DB) {
+        public Frame(String command, HashMap<String , String> header, String body, DataBase DB, int connectionId) {
             this.command = command;
             this.headers = header;
             this.body = body;

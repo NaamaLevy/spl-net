@@ -6,8 +6,8 @@ import java.util.HashMap;
 
 public class MESSAGEframe extends Frame{
 
-    public MESSAGEframe(String command, HashMap<String , String> header, String body, DataBase DB) {
-        super(command,  header, body, DB);;
+    public MESSAGEframe(String command, HashMap<String , String> headers, String body, DataBase DB, int connectionId) {
+        super(command,  headers, body, DB, connectionId);
     }
 
     public void process(){

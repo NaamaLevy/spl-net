@@ -8,8 +8,8 @@ import java.util.HashMap;
 
 public class CONNECTframe extends Frame{
 
-    public CONNECTframe(String command, HashMap<String , String> headers, String body, DataBase DB, int id) {
-        super(command,  headers, body, DB);
+    public CONNECTframe(String command, HashMap<String , String> headers, String body, DataBase DB, int connectionId) {
+        super(command,  headers, body, DB, connectionId);
         ConnectionsImpl connections = ConnectionsImpl.getInstance();
     }
 
@@ -20,7 +20,7 @@ public class CONNECTframe extends Frame{
 
         int exist = DB.isUserExist(userName);
         if (exist == -2){//new user
-            User newUser = User(DB.getClientsMap().get(id), id);
+            User newUser = User(DB.getClientsMap().get(), connectionId);
             newUser.setPassword(password);
             newUser.setUserName(userName);
             DB.getUserMap().put(userName, newUser);
@@ -29,7 +29,7 @@ public class CONNECTframe extends Frame{
 
         if (exist == -1){//logged out
             if (((User) DB.getUserMap().get(userName)).getPassword() == password){
-                ((User) DB.getUserMap().get(userName)).setId(id);
+                ((User) DB.getUserMap().get(userName)).setId(connectionId);
                 //CONNECTED frame and the client will print to the screen "Login successful.”
             }
             else {//incorrect password

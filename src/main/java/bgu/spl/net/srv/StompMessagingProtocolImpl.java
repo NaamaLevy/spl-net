@@ -20,6 +20,8 @@ public class StompMessagingProtocolImpl<T> implements StompMessagingProtocol {
     Connections<String> connections;
     BufferedReader bufferedReader;
     DataBase DB;
+    int connectionId;
+
     //constructor
     public StompMessagingProtocolImpl() {
         shouldTerminate = false;
@@ -29,11 +31,7 @@ public class StompMessagingProtocolImpl<T> implements StompMessagingProtocol {
 
 
     public void start(int connectionId, Connections<String> connections) {
-
-        //login
-        // send "CONNECTED"
-
-
+        this.connectionId = connectionId;
     }
 
 
@@ -66,7 +64,7 @@ public class StompMessagingProtocolImpl<T> implements StompMessagingProtocol {
                 }
                 String bodyAsString = bodyAsBuffer.toString();
                 if (command.equals("CONNECT")) {
-                    Frame newFrame = new CONNECTframe(command, headers, bodyAsString, DB);
+                    Frame newFrame = new CONNECTframe(command, headers, bodyAsString, DB, connectionId);
                     newFrame.process();
                 } else if (command.equals("MESSAGE")) {
                     Frame newFrame = new MESSAGEframe(command, headers, bodyAsString, DB);
