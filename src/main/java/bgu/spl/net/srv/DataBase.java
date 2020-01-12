@@ -45,5 +45,18 @@ public class DataBase<T> {
         User newUser = new User(userName, password, id);
         nextid.incrementAndGet();
     }
+    public int isUserExist(String userName){
+        for (User user : userMap.values()){
+            if (user.getUserName() == userName)
+                return user.getId();
+        }
+        return -1;
+    }
+    public boolean isUserLoggedIn(int id){
+        if (clientsMap.containsKey(id)){
+                return true;
+        }
+        return false;
+    }
 }
 

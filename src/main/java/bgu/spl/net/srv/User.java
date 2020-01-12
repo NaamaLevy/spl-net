@@ -12,4 +12,16 @@ public class User {
         this.password = password;
         this.id = id;
     }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
 }
