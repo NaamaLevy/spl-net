@@ -1,5 +1,7 @@
 package bgu.spl.net.impl.stomp;
 
+import bgu.spl.net.srv.DataBase;
+
 import java.util.HashMap;
 
 public class Frame {
@@ -9,7 +11,7 @@ public class Frame {
         private final String body;
 
 
-        public Frame(String command, HashMap<String , String> header, String body) {
+        public Frame(String command, HashMap<String , String> header, String body, DataBase DB) {
             this.command = command;
             this.headers = header;
             this.body = body;

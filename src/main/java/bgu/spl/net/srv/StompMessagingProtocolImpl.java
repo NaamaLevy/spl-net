@@ -19,16 +19,16 @@ public class StompMessagingProtocolImpl<T> implements StompMessagingProtocol {
     int userCounter;
     Connections<String> connections;
     BufferedReader bufferedReader;
-
+    DataBase DB;
     //constructor
     public StompMessagingProtocolImpl() {
         shouldTerminate = false;
         userCounter = 0;
+        DB = DataBase.getInstance();
     }
 
 
     public void start(int connectionId, Connections<String> connections) {
-
 
         //login
         // send "CONNECTED"
@@ -66,28 +66,28 @@ public class StompMessagingProtocolImpl<T> implements StompMessagingProtocol {
                 }
                 String bodyAsString = bodyAsBuffer.toString();
                 if (command.equals("CONNECT")) {
-                    Frame newFrame = new CONNECTframe(command, headers, bodyAsString);
+                    Frame newFrame = new CONNECTframe(command, headers, bodyAsString, DB);
                     newFrame.process();
                 } else if (command.equals("MESSAGE")) {
-                    Frame newFrame = new MESSAGEframe(command, headers, bodyAsString);
+                    Frame newFrame = new MESSAGEframe(command, headers, bodyAsString, DB);
                     newFrame.process();
                 } else if (command.equals("RECEIPT")) {
-                    Frame newFrame = new RECEIPTframe(command, headers, bodyAsString);
+                    Frame newFrame = new RECEIPTframe(command, headers, bodyAsString, DB);
                     newFrame.process();
                 } else if (command.equals("ERROR")) {
-                    Frame newFrame = new ERRORframe(command, headers, bodyAsString);
+                    Frame newFrame = new ERRORframe(command, headers, bodyAsString, DB);
                     newFrame.process();
                 } else if (command.equals("SEND")) {
-                    Frame newFrame = new SENDframe(command, headers, bodyAsString);
+                    Frame newFrame = new SENDframe(command, headers, bodyAsString, DB);
                     newFrame.process();
                 } else if (command.equals("SUBSCRIBE")) {
-                    Frame newFrame = new SUBSCRIBEframe(command, headers, bodyAsString);
+                    Frame newFrame = new SUBSCRIBEframe(command, headers, bodyAsString, DB);
                     newFrame.process();
                 } else if (command.equals("UNSUBSCRIBE")) {
-                    Frame newFrame = new UNSUBSCRIBEframe(command, headers, bodyAsString);
+                    Frame newFrame = new UNSUBSCRIBEframe(command, headers, bodyAsString, DB);
                     newFrame.process();
                 } else if (command.equals("DISCONNECT")) {
-                    Frame newFrame = new DISCONNECTframe(command, headers, bodyAsString);
+                    Frame newFrame = new DISCONNECTframe(command, headers, bodyAsString, DB);
                     newFrame.process();
                 }
             } catch (IOException e) {
