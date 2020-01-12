@@ -8,7 +8,7 @@ public class DataBase<T> {
     private ConcurrentHashMap<Integer, ConcurrentHashMap<String, Integer>> subscribersMap;
     private ConcurrentHashMap<String, ConcurrentHashMap<Integer, Integer>> topicsMap;
     private ConcurrentHashMap<Integer, ConnectionHandler<T>> clientsMap;
-    private ConcurrentHashMap<Integer, User> userMap;
+    private ConcurrentHashMap<String, User> userMap;
     AtomicInteger nextid;
 
     private static class SingletonHolder {
@@ -37,21 +37,23 @@ public class DataBase<T> {
         return clientsMap;
     }
 
-    public ConcurrentHashMap<Integer, User> getUserMap() {
+    public ConcurrentHashMap<String, User> getUserMap() {
         return userMap;
     }
-    public synchronized void addUser(String userName, String password){
+
+    public synchronized int addUser(ConnectionHandler CH){
         int id = nextid.get();
-        User newUser = new User(userName, password, id);
+        clientsMap.put(id,CH);
         nextid.incrementAndGet();
+        return id;
     }
     public int isUserExist(String userName){
-        for (User user : userMap.values()){
-            if (user.getUserName() == userName)
-                return user.getId();
-        }
-        return -1;
+            if (userMap.containsKey(userName)){
+                return  userMap.get(userName).getId();
+             }
+        return -2;
     }
+
     public boolean isUserLoggedIn(int id){
         if (clientsMap.containsKey(id)){
                 return true;

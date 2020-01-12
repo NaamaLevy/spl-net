@@ -10,10 +10,16 @@ public class ConnectionsImpl<T> implements Connections<T> {
     private DataBase DB;
     private final Object lock;
 
-    public ConnectionsImpl() {
+    private static class SingletonHolder{
+        private static ConnectionsImpl connections = new ConnectionsImpl();
+    }
+
+    private ConnectionsImpl() {
         DB = DataBase.getInstance();
         lock = new Object();
     }
+
+    public static ConnectionsImpl getInstance(){return SingletonHolder.connections;}
 
     @Override
     public boolean send(int connectionId, T msg) {
@@ -71,6 +77,10 @@ public class ConnectionsImpl<T> implements Connections<T> {
             //sync to prevent unregistering user while trying to send him a message
            synchronized (clientsMap){
                clientsMap.remove(connectionId);
+           }
+           User user = (User) DB.getUserMap().get(connectionId);
+           synchronized (user){
+               user.setId(-1);
            }
         }
     }

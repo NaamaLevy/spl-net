@@ -5,11 +5,11 @@ public class User {
     String userName;
     String password;
     int id;
+    ConnectionHandler CH;
 
     //constructor
-    public User(String userName, String password, int id){
-        this.userName = userName;
-        this.password = password;
+    public User(ConnectionHandler CH, int id){
+        this.CH = CH;
         this.id = id;
     }
 
@@ -23,5 +23,21 @@ public class User {
 
     public String getUserName() {
         return userName;
+    }
+
+    public ConnectionHandler getCH() {
+        return CH;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 }
