@@ -12,6 +12,9 @@ public class CONNECTframe extends Frame{
         String user = getHeaders().get("login");
         String password = getHeaders().get("passcode");
         String version = getHeaders().get("version");
+        if (
+
+        )
     }
 
 

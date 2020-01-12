@@ -14,12 +14,13 @@ import java.util.Scanner;
 import java.util.Vector;
 
 public class StompMessagingProtocolImpl<T> implements StompMessagingProtocol {
-
-    boolean shouldTerminate = false;
+    //fields
+    boolean shouldTerminate;
     int userCounter;
     Connections<String> connections;
     BufferedReader bufferedReader;
 
+    //constructor
     public StompMessagingProtocolImpl() {
         shouldTerminate = false;
         userCounter = 0;
