@@ -75,7 +75,7 @@ public class DataBase<T> {
 
     public void addSubscriberToTopic(int connectionId, String topic, int topicId){
         User user = getUserByConnectionId(connectionId);
-        if(!user.isSubscribed(topic)) { // if user is not already subscribed to this topic
+        if(!user.isSubscribedToTopic(topic)) { // if user is not already subscribed to this topic
             if (subscribersMap.get(connectionId) != null) { //if the user is already exist in subscribersMap
                 subscribersMap.get(connectionId).put(topic, topicId);
             } else { //in case user doesn't have a subscribed topic map
@@ -89,12 +89,28 @@ public class DataBase<T> {
         }
     }
 
-    public void addTopicAsSubscribed(int connectionId, String topic, int topicId){
+    public void removeSubscriberFromTopic(int connectionId, int topicId){ //TODO impl. right now it is just a copy of addSubs... from above.
         User user = getUserByConnectionId(connectionId);
-        if(!user.isSubscribed(topic)) { // if user is not already subscribed to this topic
+        if(user.isSubscribedToId(connectionId)) { // if user is subscribed to this topic
+            if (subscribersMap.get(connectionId) != null) { //if the user is exist in subscribersMap
+
+            } else { //in case user doesn't have a subscribed topic map
+
+            }
+        }
+        else{
+            //user is not subscribed to topic. should send an error? QQQ
+        }
+    }
+
+
+
+    public void addTopicAsSubscriber(int connectionId, String topic, int topicId){
+        User user = getUserByConnectionId(connectionId);
+        if(!user.isSubscribedToTopic(topic)) { // if user is not already subscribed to this topic
             if (topicsMap.get(topic) != null) { // if there is already subscribers to this topic
                 topicsMap.get(topic).put(connectionId, topicId);
-                user.subscribedTo.add(topic);
+                user.subscribedTo.put(connectionId, topic);
             }
             else{
                 ConcurrentHashMap newTopicdMap = new ConcurrentHashMap<Integer, Integer>();
@@ -105,5 +121,24 @@ public class DataBase<T> {
             //user is already subscribed to topic. should send an error? QQQ
         }
     }
+
+    public void removeTopicAsSubscriber(int connectionId, String topic, int topicId){  //TODO impl. right now it is just a copy of addTopic... from above.
+        User user = getUserByConnectionId(connectionId);
+        if(!user.isSubscribedToTopic(topic)) { // if user is not already subscribed to this topic
+            if (topicsMap.get(topic) != null) { // if there is already subscribers to this topic
+                topicsMap.get(topic).put(connectionId, topicId);
+                user.subscribedTo.put(connectionId, topic);
+            }
+            else{
+                ConcurrentHashMap newTopicdMap = new ConcurrentHashMap<Integer, Integer>();
+                topicsMap.put(topic, newTopicdMap);
+            }
+        }
+        else{
+            //user is already subscribed to topic. should send an error? QQQ
+        }
+    }
+
+
 }
 

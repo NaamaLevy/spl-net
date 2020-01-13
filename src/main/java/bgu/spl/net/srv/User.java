@@ -2,6 +2,7 @@ package bgu.spl.net.srv;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class User {
     //fields
@@ -9,12 +10,13 @@ public class User {
     String password;
     int id;
     ConnectionHandler CH;
-    List subscribedTo = new LinkedList<String>();
+    ConcurrentHashMap<Integer, String> subscribedTo;
 
     //constructor
     public User(ConnectionHandler CH, int id){
         this.CH = CH;
         this.id = id;
+        this.subscribedTo = new  ConcurrentHashMap<Integer, String>();
     }
 
     public int getId() {
@@ -45,7 +47,9 @@ public class User {
         this.userName = userName;
     }
 
-    public boolean isSubscribed(String topic) {return subscribedTo.contains(topic); }
+    public boolean isSubscribedToTopic(String topic) {return subscribedTo.containsValue(topic); }
+    public boolean isSubscribedToId(int topicId) {return subscribedTo.contains(topicId); }
+
 
 
 }

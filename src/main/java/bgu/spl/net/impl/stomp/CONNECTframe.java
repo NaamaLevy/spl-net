@@ -31,7 +31,9 @@ public class CONNECTframe extends Frame{
         if (exist == -1){//logged out
             if (((User) DB.getUserStringMap().get(userName)).getPassword() == password){
                 ((User) DB.getUserStringMap().get(userName)).setId(connectionId);
-                //CONNECTED frame and the client will print to the screen "Login successful.”
+                //CONNECTED frame and the client will print to the screen "Login successful.” // TODO naama, have a look at the buildRECEIPT method i've made in Frame class. you can make something similar.
+                                                                                                //(TODO) though I'm not sure Frame class is the right place for that. look at SUBSCRIBEFrame how i used it.
+
             }
             else {//incorrect password
                 //ERROR frame indicating the reason -the output in this case should be “Wrong password”
