@@ -23,13 +23,14 @@ public class CONNECTframe extends Frame{
             User newUser = User(DB.getClientsMap().get(), connectionId);
             newUser.setPassword(password);
             newUser.setUserName(userName);
-            DB.getUserMap().put(userName, newUser);
+            DB.getUserStringMap().put(userName, newUser);
+            DB.getUserIntegerMap().put(connectionId,newUser); //TODO naama, this is the new map i've told you about. needs to be removed when disconnect
             // CONNECTED frame to the client and the client will print "Login successful”.
         }
 
         if (exist == -1){//logged out
-            if (((User) DB.getUserMap().get(userName)).getPassword() == password){
-                ((User) DB.getUserMap().get(userName)).setId(connectionId);
+            if (((User) DB.getUserStringMap().get(userName)).getPassword() == password){
+                ((User) DB.getUserStringMap().get(userName)).setId(connectionId);
                 //CONNECTED frame and the client will print to the screen "Login successful.”
             }
             else {//incorrect password

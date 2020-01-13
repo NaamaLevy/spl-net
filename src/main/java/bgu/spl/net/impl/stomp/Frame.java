@@ -28,4 +28,12 @@ public class Frame {
     public void process(){}
     }
 
+    public String buildReceipt(int receiptId){
+        String command = "RECEIPT";
+        String header = "receipt-id:";
+        char newLine = '\n';
+        char close = '\u0000';
+        return command+newLine+header+newLine+newLine+newLine+close;
+    }
+}
 

@@ -6,9 +6,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class DataBase<T> {
     //fields
     private ConcurrentHashMap<Integer, ConcurrentHashMap<String, Integer>> subscribersMap;
-    private ConcurrentHashMap<String, ConcurrentHashMap<Integer, Integer>> topicsMap;
+    private ConcurrentHashMap<String, ConcurrentHashMap<Integer, Integer>> topicsMap;  // holds inner map like this: <connectionId, topicId>
     private ConcurrentHashMap<Integer, ConnectionHandler<T>> clientsMap;
-    private ConcurrentHashMap<String, User> userMap;
+    private ConcurrentHashMap<String, User> userStringMap;
+    private ConcurrentHashMap<Integer, User> userIntegerMap;
     AtomicInteger nextid;
 
     private static class SingletonHolder {
@@ -20,7 +21,8 @@ public class DataBase<T> {
         subscribersMap = new ConcurrentHashMap<>();
         topicsMap = new ConcurrentHashMap<String, ConcurrentHashMap<Integer, Integer>>();
         clientsMap = new ConcurrentHashMap<>();
-        userMap = new ConcurrentHashMap<>();
+        userStringMap = new ConcurrentHashMap<>();
+        userIntegerMap = new ConcurrentHashMap<>();
     }
 
     public static DataBase getInstance(){ return SingletonHolder.dataBase;}
@@ -37,9 +39,11 @@ public class DataBase<T> {
         return clientsMap;
     }
 
-    public ConcurrentHashMap<String, User> getUserMap() {
-        return userMap;
+    public ConcurrentHashMap<String, User> getUserStringMap() {
+        return userStringMap;
     }
+    public ConcurrentHashMap<Integer, User> getUserIntegerMap() { return userIntegerMap; }
+
 
     public synchronized int addUser(ConnectionHandler CH){
         int id = nextid.get();
@@ -48,8 +52,8 @@ public class DataBase<T> {
         return id;
     }
     public int isUserExist(String userName){
-            if (userMap.containsKey(userName)){
-                return  userMap.get(userName).getId();
+            if (userStringMap.containsKey(userName)){
+                return  userStringMap.get(userName).getId();
              }
         return -2;
     }
@@ -62,27 +66,44 @@ public class DataBase<T> {
     }
 
     public User getUserByName(String name){
-        return userMap.get(name);
+        return userStringMap.get(name);
     }
 
     public User getUserByConnectionId(int connectionId){
+        return userIntegerMap.get(connectionId);
+           }
 
-       //TODO
-    }
-
-    public void addSubscriberToTopic(int connectionId, String topic){
+    public void addSubscriberToTopic(int connectionId, String topic, int topicId){
         User user = getUserByConnectionId(connectionId);
-        if(!user.isSubscribed()){
-            //TODO add him to the relevent topic's map
+        if(!user.isSubscribed(topic)) { // if user is not already subscribed to this topic
+            if (subscribersMap.get(connectionId) != null) { //if the user is already exist in subscribersMap
+                subscribersMap.get(connectionId).put(topic, topicId);
+            } else { //in case user doesn't have a subscribed topic map
+                ConcurrentHashMap newSubscribedMap = new ConcurrentHashMap<String, Integer>();
+                subscribersMap.put(connectionId, newSubscribedMap);
+                subscribersMap.get(connectionId).put(topic, topicId);
+            }
+        }
+        else{
+            //user is already subscribed to topic. should send an error? QQQ
         }
     }
 
-    public void addTopicAsSubscribed(int connectionId, String topic){
-        //TODO should we hold Map <connectionId, User> as well?
-        //TODO add the topic to the user's map at subscribers Map
+    public void addTopicAsSubscribed(int connectionId, String topic, int topicId){
+        User user = getUserByConnectionId(connectionId);
+        if(!user.isSubscribed(topic)) { // if user is not already subscribed to this topic
+            if (topicsMap.get(topic) != null) { // if there is already subscribers to this topic
+                topicsMap.get(topic).put(connectionId, topicId);
+                user.subscribedTo.add(topic);
+            }
+            else{
+                ConcurrentHashMap newTopicdMap = new ConcurrentHashMap<Integer, Integer>();
+                topicsMap.put(topic, newTopicdMap);
+            }
+        }
+        else{
+            //user is already subscribed to topic. should send an error? QQQ
+        }
     }
-
-
-
 }
 

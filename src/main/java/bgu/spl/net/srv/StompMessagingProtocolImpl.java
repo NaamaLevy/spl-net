@@ -67,25 +67,25 @@ public class StompMessagingProtocolImpl<T> implements StompMessagingProtocol {
                     Frame newFrame = new CONNECTframe(command, headers, bodyAsString, DB, connectionId);
                     newFrame.process();
                 } else if (command.equals("MESSAGE")) {
-                    Frame newFrame = new MESSAGEframe(command, headers, bodyAsString, DB);
+                    Frame newFrame = new MESSAGEframe(command, headers, bodyAsString, DB, connectionId);
                     newFrame.process();
                 } else if (command.equals("RECEIPT")) {
-                    Frame newFrame = new RECEIPTframe(command, headers, bodyAsString, DB);
+                    Frame newFrame = new RECEIPTframe(command, headers, bodyAsString, DB, connectionId);
                     newFrame.process();
                 } else if (command.equals("ERROR")) {
-                    Frame newFrame = new ERRORframe(command, headers, bodyAsString, DB);
+                    Frame newFrame = new ERRORframe(command, headers, bodyAsString, DB, connectionId);
                     newFrame.process();
                 } else if (command.equals("SEND")) {
-                    Frame newFrame = new SENDframe(command, headers, bodyAsString, DB);
+                    Frame newFrame = new SENDframe(command, headers, bodyAsString, DB, connectionId);
                     newFrame.process();
                 } else if (command.equals("SUBSCRIBE")) {
-                    Frame newFrame = new SUBSCRIBEframe(command, headers, bodyAsString, DB);
+                    Frame newFrame = new SUBSCRIBEframe(command, headers, bodyAsString, DB, connectionId);
                     newFrame.process();
                 } else if (command.equals("UNSUBSCRIBE")) {
-                    Frame newFrame = new UNSUBSCRIBEframe(command, headers, bodyAsString, DB);
+                    Frame newFrame = new UNSUBSCRIBEframe(command, headers, bodyAsString, DB, connectionId);
                     newFrame.process();
                 } else if (command.equals("DISCONNECT")) {
-                    Frame newFrame = new DISCONNECTframe(command, headers, bodyAsString, DB);
+                    Frame newFrame = new DISCONNECTframe(command, headers, bodyAsString, DB, connectionId);
                     newFrame.process();
                 }
             } catch (IOException e) {
