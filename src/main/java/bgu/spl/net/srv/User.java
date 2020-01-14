@@ -36,6 +36,10 @@ public class User {
         return CH;
     }
 
+    public ConcurrentHashMap<Integer, String> getSubscribedTo() {
+        return subscribedTo;
+    }
+
     public void setId(int id) {
         this.id = id;
     }
@@ -58,5 +62,9 @@ public class User {
     public synchronized void removeTopic(int topicID) {
         subscribedTo.remove(topicID);
     }
+    public synchronized void removeAllTopics(){
+        subscribedTo.clear();
+    }
+
 }
 

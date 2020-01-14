@@ -2,6 +2,7 @@ package bgu.spl.net.srv;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.locks.Lock;
 
 public class ConnectionsImpl<T> implements Connections<T> {
@@ -54,24 +55,19 @@ public class ConnectionsImpl<T> implements Connections<T> {
 
     @Override
     public void disconnect(int connectionId) {
+        User userToDisconnect = DB.getUserByConnectionId(connectionId);
         ConcurrentHashMap<Integer, ConnectionHandler<T>> clientsMap = DB.getClientsMap();
         if (clientsMap.containsKey(connectionId)){
-            ConcurrentHashMap<String, ConcurrentHashMap<Integer, Integer>> topicsMap = DB.getTopicsMap();
-           for (ConcurrentHashMap<Integer, Integer> topicSubsMap : topicsMap.values()){
+            ConcurrentHashMap<String, ConcurrentLinkedQueue<User>> topicsMap = DB.getTopicsMap();
+            //remove User from all topics
+           for (ConcurrentLinkedQueue<User> topicSubsMap : topicsMap.values()){
                //sync to prevent unregistering user from a topic's map while trying to send him a message
                synchronized (topicSubsMap){
                    if (topicSubsMap != null){
-                        topicSubsMap.remove(connectionId);
+                       //remove User from this topic
+                        topicSubsMap.remove(userToDisconnect);
                    }
                }
-           }
-            ConcurrentHashMap<Integer, ConcurrentHashMap<String, Integer>> subscribersMap = DB.getSubscribersMap();
-            ConcurrentHashMap<String, Integer> userSubsIDs = subscribersMap.get(connectionId);
-           synchronized (userSubsIDs){
-               if (userSubsIDs != null){
-                   userSubsIDs.clear();
-               }
-               subscribersMap.remove(connectionId);
            }
             //sync to prevent unregistering user while trying to send him a message
            synchronized (clientsMap){
@@ -79,9 +75,9 @@ public class ConnectionsImpl<T> implements Connections<T> {
            }
            ConcurrentHashMap<Integer, User> UsersIntegerMap = DB.getUserIntegerMap();
            synchronized (UsersIntegerMap){
-               User user = UsersIntegerMap.get(connectionId);
-               synchronized (user){
-                   user.setId(-1);
+               synchronized (userToDisconnect){
+                   userToDisconnect.setId(-1);
+                   userToDisconnect.removeAllTopics();
                }
                UsersIntegerMap.remove(connectionId);
            }
