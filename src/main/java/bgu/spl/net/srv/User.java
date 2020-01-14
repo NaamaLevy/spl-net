@@ -65,6 +65,5 @@ public class User {
     public synchronized void removeAllTopics(){
         subscribedTo.clear();
     }
-
 }
 

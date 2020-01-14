@@ -34,6 +34,5 @@ public class Frame {
         char close = '\u0000';
         return command+newLine+header+receiptId+newLine+newLine+newLine+close;
     }
-
 }
 
