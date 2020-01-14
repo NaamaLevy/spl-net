@@ -2,6 +2,7 @@ package bgu.spl.net.impl.stomp;
 
 import bgu.spl.net.srv.ConnectionsImpl;
 import bgu.spl.net.srv.DataBase;
+import bgu.spl.net.srv.User;
 
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
@@ -16,10 +17,17 @@ public class SENDframe extends Frame{
     }
 
     public void process(){
+        int subid = 0;
         ConnectionsImpl connections = ConnectionsImpl.getInstance();
         String destination = getHeaders().get("destination");
-        ConcurrentHashMap<String, Integer> userSubs = (ConcurrentHashMap<String, Integer>) DB.getSubscribersMap().get(connectionId);
-        int subid = userSubs.get(destination);
+        User user = DB.getUserByConnectionId(connectionId);
+        ConcurrentHashMap<Integer, String> userTopics = user.getSubscribedTo();
+        for (int topicID : userTopics.keySet()){
+            if (userTopics.get(topicID).equals(destination)) {
+                subid = topicID;
+                break;
+            }
+        }
         connections.send(destination, buildMESSAGE(destination, subid, messageid, body)); // sends RECEIPT to the user
     }
 
