@@ -15,13 +15,6 @@ public class RECEIPTframe extends Frame{
 
     public void process(){
         ConnectionsImpl connections = ConnectionsImpl.getInstance();
-        connections.send(connectionId, buildRECEIPT()); // sends RECEIPT to the user
-    }
-    private String buildRECEIPT(){
-        // CONNECTED frame to the client and the client will print "Login successful”.
-        String command = "RECEIPT";
-        char newLine = '\n';
-        char close = '\u0000';
-        return command + newLine + "receipt-id: " + connectionId +newLine+newLine+newLine+close;
+        connections.send(connectionId, super.buildRECEIPT(connectionId)); // sends RECEIPT to the user
     }
 }
