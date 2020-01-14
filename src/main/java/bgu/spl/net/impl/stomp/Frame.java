@@ -26,7 +26,6 @@ public class Frame {
 
 
     public void process(){}
-    }
 
     public String buildReceipt(int receiptId){
         String command = "RECEIPT";

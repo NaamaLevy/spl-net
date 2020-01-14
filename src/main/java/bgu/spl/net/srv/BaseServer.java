@@ -42,10 +42,11 @@ public abstract class BaseServer<T> implements Server<T> {
 
                 Socket clientSock = serverSock.accept();
                 StompMessagingProtocol protocol = protocolFactory.get();
-                BlockingConnectionHandler<T> handler = new BlockingConnectionHandler<>(
+                BlockingConnectionHandler<T> handler = new BlockingConnectionHandler(
                         clientSock,
                         encdecFactory.get(),
-                        protocolFactory.get());
+                        //TODO: I added casting
+                        (MessagingProtocol) protocolFactory.get());
                 execute(handler);
                 int connectionId = DB.addUser(handler);
                 protocol.start( connectionId, connections);

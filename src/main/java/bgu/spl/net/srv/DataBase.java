@@ -58,7 +58,7 @@ public class DataBase<T> {
         return -2;
     }
 
-    public boolean isUserLoggedIn(int id){
+    public boolean isUserLoggedIn(int id){ //TODO: Hillel: do you mean connected? because you can be in clientsmap without being connected (after getting CH and before CONNECTED
         if (clientsMap.containsKey(id)){
                 return true;
         }

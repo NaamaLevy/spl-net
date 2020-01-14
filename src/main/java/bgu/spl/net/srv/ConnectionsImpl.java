@@ -78,9 +78,13 @@ public class ConnectionsImpl<T> implements Connections<T> {
            synchronized (clientsMap){
                clientsMap.remove(connectionId);
            }
-           User user = (User) DB.getUserMap().get(connectionId);
-           synchronized (user){
-               user.setId(-1);
+           ConcurrentHashMap<Integer, User> UsersIntegerMap = DB.getUserIntegerMap();
+           synchronized (UsersIntegerMap){
+               User user = UsersIntegerMap.get(connectionId);
+               synchronized (user){
+                   user.setId(-1);
+               }
+               UsersIntegerMap.remove(connectionId);
            }
         }
     }
