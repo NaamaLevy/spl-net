@@ -22,6 +22,7 @@ public class SENDframe extends Frame{
         int subid = userSubs.get(destination);
         connections.send(destination, buildMESSAGE(destination, subid, messageid, body)); // sends RECEIPT to the user
     }
+
     private String buildMESSAGE(String destination, int subID, AtomicInteger messageid, String body){
         // CONNECTED frame to the client and the client will print "Login successful”.
         String command = "MESSAGE";

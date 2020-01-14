@@ -19,8 +19,8 @@ public class CONNECTframe extends Frame{
         String userName = getHeaders().get("login");
         String password = getHeaders().get("passcode");
         String version = getHeaders().get("version");
-
         int exist = DB.isUserExist(userName);
+        //check conditions for action
         if (exist == -2){//new user //TODO: done!
             User newUser = new User((ConnectionHandler) DB.getClientsMap().get(connectionId), connectionId);
             newUser.setPassword(password);

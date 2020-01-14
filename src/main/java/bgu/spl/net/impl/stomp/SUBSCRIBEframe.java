@@ -18,12 +18,13 @@ public class SUBSCRIBEframe extends Frame{
     }
 
     public void process(){
+        Connections connections = ConnectionsImpl.getInstance();
         topicToSubscribe = headers.get("destination");
         topicId = Integer.parseInt(headers.get("id"));
         DB.addSubscriberToTopic(connectionId, topicToSubscribe, topicId);
         DB.addTopicAsSubscriber(connectionId, topicToSubscribe, topicId);
-        Connections connections = ConnectionsImpl.getInstance();
-        connections.send(connectionId, buildReceipt(topicId)); // sends RECEIPT to the user
+
+        connections.send(connectionId, buildRECEIPT(topicId)); // sends RECEIPT to the user
     }
 
 }
