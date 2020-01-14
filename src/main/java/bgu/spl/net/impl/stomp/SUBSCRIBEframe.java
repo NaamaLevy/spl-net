@@ -21,11 +21,9 @@ public class SUBSCRIBEframe extends Frame{
         Connections connections = ConnectionsImpl.getInstance();
         topicToSubscribe = headers.get("destination");
         topicId = Integer.parseInt(headers.get("id"));
-        DB.addSubscriberToTopic(connectionId, topicToSubscribe, topicId);
-        DB.addTopicAsSubscriber(connectionId, topicToSubscribe, topicId);
+        DB.subscribeUser(connectionId, topicToSubscribe,topicId);
 
         connections.send(connectionId, buildRECEIPT(topicId)); // sends RECEIPT to the user
     }
-
 }
 

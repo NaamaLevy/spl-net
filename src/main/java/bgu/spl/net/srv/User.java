@@ -10,7 +10,8 @@ public class User {
     String password;
     int id;
     ConnectionHandler CH;
-    ConcurrentHashMap<Integer, String> subscribedTo;
+    ConcurrentHashMap<Integer, String> subscribedTo;  //<topicId, topic name>
+
 
     //constructor
     public User(ConnectionHandler CH, int id){
@@ -48,9 +49,14 @@ public class User {
     }
 
     public boolean isSubscribedToTopic(String topic) {return subscribedTo.containsValue(topic); }
+
     public boolean isSubscribedToId(int topicId) {return subscribedTo.contains(topicId); }
 
-
-
+    public synchronized void setTopic(String topic, int topicID) {
+        subscribedTo.put(topicID, topic);
+    }
+    public synchronized void removeTopic(int topicID) {
+        subscribedTo.remove(topicID);
+    }
 }
 

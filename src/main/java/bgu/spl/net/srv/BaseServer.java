@@ -45,11 +45,11 @@ public abstract class BaseServer<T> implements Server<T> {
                 BlockingConnectionHandler<T> handler = new BlockingConnectionHandler(
                         clientSock,
                         encdecFactory.get(),
-                        //TODO: I added casting
+                        //TODO: start Stomp protocol
                         (MessagingProtocol) protocolFactory.get());
-                execute(handler);
                 int connectionId = DB.addUser(handler);
                 protocol.start( connectionId, connections);
+                execute(handler);
             }
         } catch (IOException ex) {
         }

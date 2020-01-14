@@ -120,4 +120,8 @@ public class NonBlockingConnectionHandler<T> implements ConnectionHandler<T> {
     public void send(T msg) {
         //IMPLEMENT IF NEEDED
     }
+
+    public MessagingProtocol<T> getProtocol() {
+        return protocol;
+    }
 }

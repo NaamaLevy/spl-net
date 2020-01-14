@@ -19,7 +19,8 @@ public class Reactor<T> implements Server<T> {
     private final Supplier<MessageEncoderDecoder<T>> readerFactory;
     private final ActorThreadPool pool;
     private Selector selector;
-
+    private DataBase DB;
+    private final Connections connections;
     private Thread selectorThread;
     private final ConcurrentLinkedQueue<Runnable> selectorTasks = new ConcurrentLinkedQueue<>();
 
@@ -33,6 +34,8 @@ public class Reactor<T> implements Server<T> {
         this.port = port;
         this.protocolFactory = protocolFactory;
         this.readerFactory = readerFactory;
+        DB = DataBase.getInstance();
+        this.connections = ConnectionsImpl.getInstance();
     }
 
     @Override
@@ -101,6 +104,9 @@ public class Reactor<T> implements Server<T> {
                 clientChan,
                 this);
         clientChan.register(selector, SelectionKey.OP_READ, handler);
+        int connectionId = DB.addUser(handler);
+        //TODO: start Stomp protocol
+//        protocol.start( connectionId, connections);
     }
 
     private void handleReadWrite(SelectionKey key) {
