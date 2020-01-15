@@ -1,7 +1,9 @@
 package bgu.spl.net.srv;
-
+import bgu.spl.net.srv.NonBlockingConnectionHandler;
 import bgu.spl.net.api.MessageEncoderDecoder;
 import bgu.spl.net.api.MessagingProtocol;
+import bgu.spl.net.api.StompMessagingProtocol;
+
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.channels.ClosedSelectorException;
@@ -15,8 +17,8 @@ import java.util.function.Supplier;
 public class Reactor<T> implements Server<T> {
 
     private final int port;
-    private final Supplier<MessagingProtocol<T>> protocolFactory;
-    private final Supplier<MessageEncoderDecoder<T>> readerFactory;
+    private final Supplier<StompMessagingProtocolImpl> protocolFactory;
+    private final Supplier<STOMPMessageEncoderDecoder> readerFactory;
     private final ActorThreadPool pool;
     private Selector selector;
     private DataBase DB;
@@ -27,8 +29,8 @@ public class Reactor<T> implements Server<T> {
     public Reactor(
             int numThreads,
             int port,
-            Supplier<MessagingProtocol<T>> protocolFactory,
-            Supplier<MessageEncoderDecoder<T>> readerFactory) {
+            Supplier<StompMessagingProtocolImpl> protocolFactory,
+            Supplier<STOMPMessageEncoderDecoder> readerFactory) {
 
         this.pool = new ActorThreadPool(numThreads);
         this.port = port;
@@ -98,15 +100,16 @@ public class Reactor<T> implements Server<T> {
     private void handleAccept(ServerSocketChannel serverChan, Selector selector) throws IOException {
         SocketChannel clientChan = serverChan.accept();
         clientChan.configureBlocking(false);
-        final NonBlockingConnectionHandler<T> handler = new NonBlockingConnectionHandler<>(
+        StompMessagingProtocolImpl protocol = protocolFactory.get();
+        final NonBlockingConnectionHandler<T> handler = new NonBlockingConnectionHandler<T>(
                 readerFactory.get(),
-                protocolFactory.get(),
+                protocol,
                 clientChan,
                 this);
         clientChan.register(selector, SelectionKey.OP_READ, handler);
         int connectionId = DB.addUser(handler);
         //TODO: start Stomp protocol
-//        protocol.start( connectionId, connections);
+        protocol.start( connectionId, connections);
     }
 
     private void handleReadWrite(SelectionKey key) {

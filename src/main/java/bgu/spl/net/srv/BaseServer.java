@@ -13,7 +13,7 @@ public abstract class BaseServer<T> implements Server<T> {
 
     private final int port;
     private final Supplier<StompMessagingProtocol> protocolFactory;
-    private final Supplier<MessageEncoderDecoder<T>> encdecFactory;
+    private final Supplier<STOMPMessageEncoderDecoder> encdecFactory;
     private final Connections connections;
     private ServerSocket sock;
     private DataBase DB;
@@ -21,7 +21,7 @@ public abstract class BaseServer<T> implements Server<T> {
     public BaseServer(
             int port,
             Supplier<StompMessagingProtocol> protocolFactory,  //QQQ understand if the supplier can provide our specific protocol (StompMessagingProtocol)
-            Supplier<MessageEncoderDecoder<T>> encdecFactory) {
+            Supplier<STOMPMessageEncoderDecoder> encdecFactory) {
         this.connections = ConnectionsImpl.getInstance();
         this.port = port;
         this.protocolFactory = protocolFactory;
