@@ -17,26 +17,26 @@ import java.util.function.Supplier;
 public class Reactor<T> implements Server<T> {
 
     private final int port;
-    private final Supplier<StompMessagingProtocolImpl> protocolFactory;
-    private final Supplier<STOMPMessageEncoderDecoder> readerFactory;
+    private final Supplier<StompMessagingProtocol<T>> protocolFactory;
+    private final Supplier<MessageEncoderDecoder<T>> readerFactory;
     private final ActorThreadPool pool;
     private Selector selector;
     private DataBase DB;
-    private final Connections connections;
+    private final ConnectionsImpl<String> connections;
     private Thread selectorThread;
     private final ConcurrentLinkedQueue<Runnable> selectorTasks = new ConcurrentLinkedQueue<>();
 
     public Reactor(
             int numThreads,
             int port,
-            Supplier<StompMessagingProtocolImpl> protocolFactory,
-            Supplier<STOMPMessageEncoderDecoder> readerFactory) {
+            Supplier<StompMessagingProtocol<T>> protocolFactory,
+            Supplier<MessageEncoderDecoder<T>> readerFactory) {
 
+        this.DB = DataBase.getInstance();
         this.pool = new ActorThreadPool(numThreads);
         this.port = port;
         this.protocolFactory = protocolFactory;
         this.readerFactory = readerFactory;
-        DB = DataBase.getInstance();
         this.connections = ConnectionsImpl.getInstance();
     }
 
@@ -100,16 +100,12 @@ public class Reactor<T> implements Server<T> {
     private void handleAccept(ServerSocketChannel serverChan, Selector selector) throws IOException {
         SocketChannel clientChan = serverChan.accept();
         clientChan.configureBlocking(false);
-        StompMessagingProtocolImpl protocol = protocolFactory.get();
         final NonBlockingConnectionHandler<T> handler = new NonBlockingConnectionHandler<T>(
                 readerFactory.get(),
-                protocol,
+                protocolFactory.get(),
                 clientChan,
-                this);
+                this, connections );
         clientChan.register(selector, SelectionKey.OP_READ, handler);
-        int connectionId = DB.addUser(handler);
-        //TODO: start Stomp protocol
-        protocol.start( connectionId, connections);
     }
 
     private void handleReadWrite(SelectionKey key) {

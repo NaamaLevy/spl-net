@@ -12,7 +12,7 @@ public class ConnectionsImpl<T> implements Connections<T> {
     private final Object lock;
 
     private static class SingletonHolder{
-        private static ConnectionsImpl connections = new ConnectionsImpl();
+        private static ConnectionsImpl connections = new ConnectionsImpl<>();
     }
 
     private ConnectionsImpl() {

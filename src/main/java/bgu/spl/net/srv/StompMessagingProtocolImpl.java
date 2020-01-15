@@ -9,7 +9,7 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.util.HashMap;
 
-public class StompMessagingProtocolImpl<T> implements StompMessagingProtocol<T> {
+public class StompMessagingProtocolImpl implements StompMessagingProtocol<String> {
     //fields
     boolean shouldTerminate;
     int userCounter;

@@ -2,7 +2,9 @@ package bgu.spl.net.srv;
 
 import bgu.spl.net.api.MessageEncoderDecoder;
 import bgu.spl.net.api.MessagingProtocol;
-
+import bgu.spl.net.api.StompMessagingProtocol;
+import bgu.spl.net.srv.Connections;
+import bgu.spl.net.srv.ConnectionHandler;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
@@ -14,22 +16,28 @@ public class NonBlockingConnectionHandler<T> implements ConnectionHandler<T> {
 
     private static final int BUFFER_ALLOCATION_SIZE = 1 << 13; //8k
     private static final ConcurrentLinkedQueue<ByteBuffer> BUFFER_POOL = new ConcurrentLinkedQueue<>();
+    private static final DataBase<Object> DB = DataBase.getInstance();
 
-    private final StompMessagingProtocolImpl<T> protocol;
-    private final STOMPMessageEncoderDecoder encdec;
+    private final StompMessagingProtocol<T> protocol;
+    private final MessageEncoderDecoder<T> encdec;
     private final Queue<ByteBuffer> writeQueue = new ConcurrentLinkedQueue<>();
     private final SocketChannel chan;
     private final Reactor reactor;
+    private final Connections<String> connections;
+    private int connectionId;
+    private boolean isFirst = true;
 
     public NonBlockingConnectionHandler(
-            STOMPMessageEncoderDecoder reader,
-            StompMessagingProtocolImpl<T> protocol,
+            MessageEncoderDecoder<T> reader,
+            StompMessagingProtocol<T> protocol,
             SocketChannel chan,
-            Reactor reactor) {
+            Reactor reactor, ConnectionsImpl<String> connections) {
         this.chan = chan;
         this.encdec = reader;
         this.protocol = protocol;
         this.reactor = reactor;
+        this.connections = connections;
+        this.connectionId = DB.addUser(this);
     }
 
     public Runnable continueRead() {
@@ -46,8 +54,12 @@ public class NonBlockingConnectionHandler<T> implements ConnectionHandler<T> {
             buf.flip();
             return () -> {
                 try {
+                    if (isFirst) {
+                        protocol.start(connectionId, connections);
+                        isFirst = false;
+                    }
                     while (buf.hasRemaining()) {
-                        String nextMessage = encdec.decodeNextByte(buf.get());
+                        T nextMessage = encdec.decodeNextByte(buf.get());
                         if (nextMessage != null) {
 //                            T response =
                                     protocol.process(nextMessage);
@@ -57,8 +69,6 @@ public class NonBlockingConnectionHandler<T> implements ConnectionHandler<T> {
 //                            }
                         }
                     }
-                } catch (IOException e) {
-                    e.printStackTrace();
                 } finally {
                     releaseBuffer(buf);
                 }
@@ -122,9 +132,5 @@ public class NonBlockingConnectionHandler<T> implements ConnectionHandler<T> {
     @Override
     public void send(T msg) {
         //IMPLEMENT IF NEEDED
-    }
-
-    public StompMessagingProtocolImpl<T> getProtocol() {
-        return protocol;
     }
 }
