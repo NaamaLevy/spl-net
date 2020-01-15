@@ -25,7 +25,7 @@ public class NonBlockingConnectionHandler<T> implements ConnectionHandler<T> {
     private final Reactor reactor;
     private final Connections<String> connections;
     private int connectionId;
-    private boolean isFirst = true;
+    private boolean isFirst;
 
     public NonBlockingConnectionHandler(
             MessageEncoderDecoder<T> reader,
@@ -38,6 +38,8 @@ public class NonBlockingConnectionHandler<T> implements ConnectionHandler<T> {
         this.reactor = reactor;
         this.connections = connections;
         this.connectionId = DB.addUser(this);
+        isFirst = true;
+
     }
 
     public Runnable continueRead() {
@@ -62,7 +64,7 @@ public class NonBlockingConnectionHandler<T> implements ConnectionHandler<T> {
                         T nextMessage = encdec.decodeNextByte(buf.get());
                         if (nextMessage != null) {
 //                            T response =
-                                    protocol.process(nextMessage);
+//                                    protocol.process(nextMessage);
 //                            if (response != null) {
 //                                writeQueue.add(ByteBuffer.wrap(encdec.encode(response)));
 //                                reactor.updateInterestedOps(chan, SelectionKey.OP_READ | SelectionKey.OP_WRITE);

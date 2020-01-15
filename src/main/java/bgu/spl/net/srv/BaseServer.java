@@ -45,8 +45,7 @@ public abstract class BaseServer<T> implements Server<T> {
                 BlockingConnectionHandler<T> handler = new BlockingConnectionHandler(
                         clientSock,
                         encdecFactory.get(),
-                        //TODO: start Stomp protocol
-                        (MessagingProtocol) protocolFactory.get());
+                        protocolFactory.get(), connections);
                 int connectionId = DB.addUser(handler);
                 protocol.start( connectionId, connections);
                 execute(handler);
