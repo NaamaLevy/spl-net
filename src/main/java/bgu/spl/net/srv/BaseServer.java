@@ -12,7 +12,7 @@ import java.util.function.Supplier;
 public abstract class BaseServer<T> implements Server<T> {
 
     private final int port;
-    private final Supplier<StompMessagingProtocol> protocolFactory;
+    private final Supplier<StompMessagingProtocol<T>> protocolFactory;
     private final Supplier<MessageEncoderDecoder<T>> encdecFactory;
     private final Connections connections;
     private ServerSocket sock;
@@ -20,7 +20,7 @@ public abstract class BaseServer<T> implements Server<T> {
 
     public BaseServer(
             int port,
-            Supplier<StompMessagingProtocol> protocolFactory,  //QQQ understand if the supplier can provide our specific protocol (StompMessagingProtocol)
+            Supplier<StompMessagingProtocol<T>> protocolFactory,  //QQQ understand if the supplier can provide our specific protocol (StompMessagingProtocol)
             Supplier<MessageEncoderDecoder<T>> encdecFactory) {
         this.connections = ConnectionsImpl.getInstance();
         this.port = port;
@@ -41,11 +41,10 @@ public abstract class BaseServer<T> implements Server<T> {
             while (!Thread.currentThread().isInterrupted()) {
 
                 Socket clientSock = serverSock.accept();
-                StompMessagingProtocol protocol = protocolFactory.get();
+                StompMessagingProtocol<T> protocol = protocolFactory.get();
                 BlockingConnectionHandler<T> handler = new BlockingConnectionHandler(
                         clientSock,
                         encdecFactory.get(),
-                        //TODO: start Stomp protocol
                         (MessagingProtocol) protocolFactory.get());
                 int connectionId = DB.addUser(handler);
                 protocol.start( connectionId, connections);

@@ -1,19 +1,15 @@
 package bgu.spl.net.srv;
 
 import bgu.spl.net.api.StompMessagingProtocol;
-import bgu.spl.net.impl.rci.Command;
 import bgu.spl.net.impl.stomp.*;
-import bgu.spl.net.srv.Connections;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.util.HashMap;
-import java.util.Scanner;
-import java.util.Vector;
 
-public class StompMessagingProtocolImpl<T> implements StompMessagingProtocol {
+public class StompMessagingProtocolImpl<T> implements StompMessagingProtocol<T> {
     //fields
     boolean shouldTerminate;
     int userCounter;
