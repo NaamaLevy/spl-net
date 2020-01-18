@@ -63,16 +63,6 @@ public class StompMessagingProtocolImpl implements StompMessagingProtocol<String
                     Frame newFrame = new CONNECTframe(command, headers, bodyAsString, DB, connectionId);
                     newFrame.process();
                 }
-//                else if (command.equals("MESSAGE")) {
-//                    Frame newFrame = new MESSAGEframe(command, headers, bodyAsString, DB, connectionId);
-//                    newFrame.process();
-//                } else if (command.equals("RECEIPT")) {
-//                    Frame newFrame = new RECEIPTframe(command, headers, bodyAsString, DB, connectionId);
-//                    newFrame.process();
-//                } else if (command.equals("ERROR")) {
-//                    Frame newFrame = new ERRORframe(command, headers, bodyAsString, DB, connectionId);
-//                    newFrame.process();
-//                }
                 else if (command.equals("SEND")) {
                     Frame newFrame = new SENDframe(command, headers, bodyAsString, DB, connectionId);
                     newFrame.process();
