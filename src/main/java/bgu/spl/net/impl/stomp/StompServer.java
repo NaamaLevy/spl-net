@@ -9,9 +9,9 @@ public class StompServer {
     public static void main(String[] args) {
 
 //        if(args[1] =="tpc"){
-//            Server.threadPerClient(Integer.parseInt(args[0]),
-//                    ()-> new StompMessagingProtocolImpl(),
-//                    STOMPMessageEncoderDecoder::new).serve();
+            Server.threadPerClient(7777,
+                    ()-> new StompMessagingProtocolImpl(),
+                    STOMPMessageEncoderDecoder::new).serve();
 //        }
 //        if(args[1] == "reactor"){
 //            Server.reactor(

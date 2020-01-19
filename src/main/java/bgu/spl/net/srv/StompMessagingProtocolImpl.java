@@ -40,28 +40,31 @@ public class StompMessagingProtocolImpl implements StompMessagingProtocol<String
         if (bufferedMessage.ready()) {
             try {
                 //gets command
-                String command = bufferedMessage.readLine();
+                String command;
+                command = bufferedMessage.readLine();
                 // gets headers
                 HashMap<String, String> headers = new HashMap();
                 String header;
                 System.out.println(command);
-                while (((header = bufferedMessage.readLine()).length()) > 0) {
+                while (((header = bufferedMessage.readLine())).length() > 0 ) {
                     int index = header.indexOf(':');
                     System.out.println(index);
-                    String key = header.substring(0, index);
-                    String value = header.substring(index + 1, header.length());
-                    headers.put(key.trim(), value.trim());
+                    if(index != -1) {
+                        String key = header.substring(0, index);
+                        String value = header.substring(index + 1, header.length());
+                        headers.put(key.trim(), value.trim());
+                    }
                 }
+                while (((header = bufferedMessage.readLine())).length() == 0 ){}
                 // gets body
-                StringBuffer bodyAsBuffer = new StringBuffer();
-                char c;
-                while ((c = (char) bufferedMessage.read()) != '\u0000') {
-                    bodyAsBuffer.append(c);
-                }
-                String bodyAsString = bodyAsBuffer.toString();
+
+                String bodyAsString = bufferedMessage.readLine();
+
+
                 if (command.equals("CONNECT")) {
                     Frame newFrame = new CONNECTframe(command, headers, bodyAsString, DB, connectionId);
                     newFrame.process();
+                    //     login 127.0.0.1:7777 hillel 1234
                 }
                 else if (command.equals("SEND")) {
                     Frame newFrame = new SENDframe(command, headers, bodyAsString, DB, connectionId);
