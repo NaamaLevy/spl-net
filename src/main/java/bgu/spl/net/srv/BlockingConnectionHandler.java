@@ -22,6 +22,8 @@ public class BlockingConnectionHandler<T> implements Runnable, ConnectionHandler
     private boolean isFirst;
     DataBase DB = DataBase.getInstance();
 
+
+
     public BlockingConnectionHandler(Socket sock, MessageEncoderDecoder<T> reader, StompMessagingProtocol<T> protocol, ConnectionsImpl<String> connections) {
         this.sock = sock;
         this.encdec = reader;
@@ -30,6 +32,7 @@ public class BlockingConnectionHandler<T> implements Runnable, ConnectionHandler
         connected = true;
         isFirst = true;
         this.connectionId = DB.addUser(this);
+
     }
 
     @Override
@@ -66,6 +69,14 @@ public class BlockingConnectionHandler<T> implements Runnable, ConnectionHandler
 
     @Override
     public void send(T msg) {
-        //IMPLEMENT IF NEEDED
+
+        if (msg != null) {
+            try {
+                out.write(encdec.encode(msg));
+                out.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
