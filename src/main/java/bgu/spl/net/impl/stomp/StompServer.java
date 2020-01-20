@@ -16,8 +16,7 @@ public class StompServer {
 //        if(args[1] == "reactor"){
 //            Server.reactor(
 //                    Runtime.getRuntime().availableProcessors(),
-//               //     Integer.parseInt(args[0]), //port
-//                    7777,
+//                    Integer.parseInt(args[0]), //port
 //                    () ->  new StompMessagingProtocolImpl(),
 //                    STOMPMessageEncoderDecoder::new).serve();
 //

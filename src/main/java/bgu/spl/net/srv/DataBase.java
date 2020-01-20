@@ -42,12 +42,15 @@ public class DataBase<T> {
     public ConcurrentHashMap<Integer, User> getUserIntegerMap() { return userIntegerMap; }
 
 
-    public synchronized int addUser(ConnectionHandler CH){
+    public int addUser(ConnectionHandler CH){
         int id = nextid.get();
-        clientsMap.put(id,CH);
-        nextid.incrementAndGet();
+        synchronized (clientsMap){
+            clientsMap.put(id,CH);
+            nextid.incrementAndGet();
+        }
         return id;
     }
+
     public int isUserExist(String userName){
             if (userStringMap.containsKey(userName)){
                 return  userStringMap.get(userName).getId();
@@ -68,18 +71,22 @@ public class DataBase<T> {
         User user = getUserByConnectionId(connectionId);
         if(!user.isSubscribedToTopic(topic)) {// if user is not already subscribed to this topic
             user.setTopic(topic, topicId); //add the topic to the user
-            if(topicsMap.get(topic) == null){
-                topicsMap.put(topic, new ConcurrentLinkedQueue<User>());
+            synchronized (user) {
+                if (topicsMap.get(topic) == null) {
+                    topicsMap.put(topic, new ConcurrentLinkedQueue<User>());
+                }
+                topicsMap.get(topic).add(user); //add the user to the topic
             }
-            topicsMap.get(topic).add(user); //add the user to the topic
         }
     }
 
     public void unsubscribeUser(int connectionId, String topic, int topicId){
         User user = getUserByConnectionId(connectionId);
-        if(user.isSubscribedToTopic(topic)) {// if user is subscribed to this topic
-            topicsMap.get(topic).remove(user); //removes the user from the topic
-            user.removeTopic(topicId); //removes the topic from the user
+        synchronized (user){
+            if(user.isSubscribedToTopic(topic)) {// if user is subscribed to this topic
+                topicsMap.get(topic).remove(user); //removes the user from the topic
+                user.removeTopic(topicId); //removes the topic from the user
+            }
         }
     }
 }
