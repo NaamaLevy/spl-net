@@ -45,6 +45,9 @@ public class NonBlockingConnectionHandler<T> implements ConnectionHandler<T> {
         isFirst = true;
 
     }
+    public int getConnectionID(){
+        return  connectionId;
+    }
 
     public Runnable continueRead() {
         ByteBuffer buf = leaseBuffer();

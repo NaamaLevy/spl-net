@@ -35,6 +35,10 @@ public class BlockingConnectionHandler<T> implements Runnable, ConnectionHandler
 
     }
 
+    public int getConnectionID(){
+        return  connectionId;
+    }
+
     @Override
     public void run() {
         protocol.start(connectionId, connections);
