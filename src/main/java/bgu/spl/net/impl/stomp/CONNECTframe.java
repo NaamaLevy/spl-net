@@ -25,6 +25,7 @@ public class CONNECTframe extends Frame{
             User newUser = new User((ConnectionHandler) DB.getClientsMap().get(connectionId), connectionId);
             newUser.setPassword(password);
             newUser.setUserName(userName);
+            System.out.println("created new user with name: " + userName +"   password: "+password);
             DB.getUserStringMap().put(userName, newUser);
             DB.getUserIntegerMap().put(connectionId,newUser); //TODO naama, this is the new map i've told you about. needs to be removed when disconnect - DONE!!!
             // CONNECTED frame to the client and the client will print "Login successful”.
@@ -35,8 +36,8 @@ public class CONNECTframe extends Frame{
             if (((User) DB.getUserStringMap().get(userName)).getPassword() == password){
                 ((User) DB.getUserStringMap().get(userName)).setId(connectionId);
                 DB.getUserIntegerMap().put(connectionId, DB.getUserStringMap().get(userName));
-                //CONNECTED frame and the client will print to the screen "Login successful.” // TODO naama, have a look at the buildRECEIPT method i've made in Frame class. you can make something similar.
-                connections.send(connectionId, buildCONNECTED(version)); // sends RECEIPT to the user //(TODO) though I'm not sure Frame class is the right place for that. look at SUBSCRIBEFrame how i used it.
+                //CONNECTED frame and the client will print to the screen "Login successful.”
+                connections.send(connectionId, buildCONNECTED(version)); // sends RECEIPT to the user
 
             }
             else {//incorrect password TODO: done!

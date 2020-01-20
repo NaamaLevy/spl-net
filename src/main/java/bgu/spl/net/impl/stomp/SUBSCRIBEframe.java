@@ -3,6 +3,7 @@ package bgu.spl.net.impl.stomp;
 import bgu.spl.net.srv.Connections;
 import bgu.spl.net.srv.ConnectionsImpl;
 import bgu.spl.net.srv.DataBase;
+import bgu.spl.net.srv.User;
 
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
@@ -25,6 +26,7 @@ public class SUBSCRIBEframe extends Frame{
         receiptId = Integer.parseInt(headers.get("receipt"));
         //subscribe user to topic
         DB.subscribeUser(connectionId, topicToSubscribe,topicId);
+        System.out.println("subscribed "+DB.getUserByConnectionId(connectionId).getUserName() +" to " + topicToSubscribe);
         //return to user RECEIPT for this frame
         connections.send(connectionId, buildRECEIPT(receiptId)); // sends RECEIPT to the user
     }

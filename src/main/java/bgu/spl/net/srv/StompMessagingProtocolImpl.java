@@ -45,19 +45,17 @@ public class StompMessagingProtocolImpl implements StompMessagingProtocol<String
                 // gets headers
                 HashMap<String, String> headers = new HashMap();
                 String header;
-                System.out.println(command);
+                System.out.println("got the command: " + command);
                 while (((header = bufferedMessage.readLine())).length() > 0 ) {
                     int index = header.indexOf(':');
-                    System.out.println(index);
                     if(index != -1) {
                         String key = header.substring(0, index);
                         String value = header.substring(index + 1, header.length());
                         headers.put(key.trim(), value.trim());
                     }
                 }
-                while (((header = bufferedMessage.readLine())).length() == 0 ){}
+                bufferedMessage.readLine();
                 // gets body
-
                 String bodyAsString = bufferedMessage.readLine();
 
 
