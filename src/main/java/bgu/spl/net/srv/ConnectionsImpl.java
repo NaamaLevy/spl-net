@@ -49,7 +49,7 @@ public class ConnectionsImpl<T> implements Connections<T> {
                 int index = 0;
                 while (index < size) {
                     User user = topicSubsQueue.poll();
-                    ConnectionHandler ch = user.getCH();
+                    send(user.getId(), msg);
                     index++;
                     topicSubsQueue.add(user);
                 }
