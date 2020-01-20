@@ -35,7 +35,11 @@ public class StompMessagingProtocolImpl implements StompMessagingProtocol<String
 //        String[] messageVector = message.split("/n");
 //        String command = messageVector[0];
         System.out.println(message);
-        if(message.charAt(0)=='\n') message.substring(1,message.length());
+        if(message.charAt(0)=='\n'){
+            System.out.println("I'm cutting!!!");
+            message.substring(1,message.length());
+        }
+        System.out.println("now i loojk like this:");
         System.out.println(message);
         Reader reader = new StringReader(message);
         BufferedReader bufferedMessage = new BufferedReader(reader);
