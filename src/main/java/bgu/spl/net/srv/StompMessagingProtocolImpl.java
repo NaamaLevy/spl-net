@@ -34,7 +34,9 @@ public class StompMessagingProtocolImpl implements StompMessagingProtocol<String
     public void process(String message) throws IOException {
 //        String[] messageVector = message.split("/n");
 //        String command = messageVector[0];
-
+        System.out.println(message);
+        if(message.charAt(0)=='\n') message.substring(1,message.length());
+        System.out.println(message);
         Reader reader = new StringReader(message);
         BufferedReader bufferedMessage = new BufferedReader(reader);
         if (bufferedMessage.ready()) {
