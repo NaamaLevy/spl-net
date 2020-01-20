@@ -68,17 +68,21 @@ public class DataBase<T> {
 
     public void subscribeUser(int connectionId, String topic, int topicId){
         User user = getUserByConnectionId(connectionId);
-        if(!user.isSubscribedToTopic(topic)) {// if user is not already subscribed to this topic
-            user.setTopic(topic, topicId); //add the topic to the user
-            topicsMap.get(topic).add(user); //add the user to the topic
+        synchronized (user){
+            if(!user.isSubscribedToTopic(topic)) {// if user is not already subscribed to this topic
+                user.setTopic(topic, topicId); //add the topic to the user
+                topicsMap.get(topic).add(user); //add the user to the topic
+            }
         }
     }
 
     public void unsubscribeUser(int connectionId, String topic, int topicId){
         User user = getUserByConnectionId(connectionId);
-        if(user.isSubscribedToTopic(topic)) {// if user is subscribed to this topic
-            topicsMap.get(topic).remove(user); //removes the user from the topic
-            user.removeTopic(topicId); //removes the topic from the user
+        synchronized (user){
+            if(user.isSubscribedToTopic(topic)) {// if user is subscribed to this topic
+                topicsMap.get(topic).remove(user); //removes the user from the topic
+                user.removeTopic(topicId); //removes the topic from the user
+            }
         }
     }
 }
