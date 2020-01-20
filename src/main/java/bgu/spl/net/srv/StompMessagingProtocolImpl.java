@@ -44,6 +44,7 @@ public class StompMessagingProtocolImpl implements StompMessagingProtocol<String
         int i = 0;
         if (words.get(0).length()==0) i = 1;
         command = words.get(i);
+        i++;
         // gets headers
         HashMap<String, String> headers = new HashMap();
         String header;

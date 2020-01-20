@@ -40,12 +40,12 @@ public class ConnectionsImpl<T> implements Connections<T> {
 
     @Override
     public void send(String channel, T msg) {
-        ConcurrentHashMap<String, ConcurrentHashMap<Integer, Integer>> topicsMap = DB.getTopicsMap();
-        ConcurrentHashMap topicSubsMap = topicsMap.get(channel);
+        ConcurrentHashMap<String, ConcurrentLinkedQueue<User>> topicsMap = DB.getTopicsMap();
+        ConcurrentLinkedQueue<User> topicSubsQueue = topicsMap.get(channel);
         //sync to prevent unregistering user from a topic's map while trying to send him a message
-        synchronized (topicSubsMap){
-            if (topicSubsMap != null) {
-                for (Object sub : topicSubsMap.values()) {
+        synchronized (topicSubsQueue){
+            if (topicSubsQueue != null) {
+                for (Object sub : topicSubsQueue) {
                     ConcurrentHashMap<Integer, ConnectionHandler<T>> clientsMap = DB.getClientsMap();
                     clientsMap.get((Integer) sub).send(msg);
                 }
