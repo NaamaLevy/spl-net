@@ -45,9 +45,13 @@ public class ConnectionsImpl<T> implements Connections<T> {
         //sync to prevent unregistering user from a topic's map while trying to send him a message
         synchronized (topicSubsQueue){
             if (topicSubsQueue != null) {
-                for (Object sub : topicSubsQueue) {
-                    ConcurrentHashMap<Integer, ConnectionHandler<T>> clientsMap = DB.getClientsMap();
-                    clientsMap.get((Integer) sub).send(msg);
+                int size = topicSubsQueue.size();
+                int index = 0;
+                while (index < size) {
+                    User user = topicSubsQueue.poll();
+                    ConnectionHandler ch = user.getCH();
+                    index++;
+                    topicSubsQueue.add(user);
                 }
             }
         }
