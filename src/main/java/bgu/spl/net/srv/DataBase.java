@@ -68,6 +68,9 @@ public class DataBase<T> {
         User user = getUserByConnectionId(connectionId);
         if(!user.isSubscribedToTopic(topic)) {// if user is not already subscribed to this topic
             user.setTopic(topic, topicId); //add the topic to the user
+            if(topicsMap.get(topic) == null){
+                topicsMap.put(topic, new ConcurrentLinkedQueue<User>());
+            }
             topicsMap.get(topic).add(user); //add the user to the topic
         }
     }

@@ -22,7 +22,7 @@ public class SUBSCRIBEframe extends Frame{
     public void process(){
         Connections connections = ConnectionsImpl.getInstance();
         topicToSubscribe = headers.get("destination");
-        topicId = Integer.parseInt(headers.get("receipt-id"));
+        topicId = Integer.parseInt(headers.get("id"));
         receiptId = Integer.parseInt(headers.get("receipt"));
         //subscribe user to topic
         DB.subscribeUser(connectionId, topicToSubscribe,topicId);

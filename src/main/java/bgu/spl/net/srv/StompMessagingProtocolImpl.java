@@ -7,7 +7,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 public class StompMessagingProtocolImpl implements StompMessagingProtocol<String> {
     //fields
@@ -32,61 +35,64 @@ public class StompMessagingProtocolImpl implements StompMessagingProtocol<String
 
 
     public void process(String message) throws IOException {
-//        String[] messageVector = message.split("/n");
-//        String command = messageVector[0];
-        System.out.println(message);
-        if(message.charAt(0)=='\n'){
-            System.out.println("I'm cutting!!!");
-            message.substring(1,message.length());
-        }
-        System.out.println("now i loojk like this:");
-        System.out.println(message);
-        Reader reader = new StringReader(message);
-        BufferedReader bufferedMessage = new BufferedReader(reader);
-        if (bufferedMessage.ready()) {
-            try {
-                //gets command
-                String command;
-                command = bufferedMessage.readLine();
-                // gets headers
-                HashMap<String, String> headers = new HashMap();
-                String header;
-                System.out.println("got the command: " + command);
-                while (((header = bufferedMessage.readLine())).length() > 0 ) {
-                    int index = header.indexOf(':');
-                    if(index != -1) {
-                        String key = header.substring(0, index);
-                        String value = header.substring(index + 1, header.length());
-                        headers.put(key.trim(), value.trim());
-                    }
-                }
-                bufferedMessage.readLine();
-                // gets body
-                String bodyAsString = bufferedMessage.readLine();
+
+        List<String> words = new ArrayList<>(Arrays.asList(message.split("\n")));
 
 
-                if (command.equals("CONNECT")) {
-                    Frame newFrame = new CONNECTframe(command, headers, bodyAsString, DB, connectionId);
-                    newFrame.process();
-                    //     login 127.0.0.1:7777 hillel 1234
-                }
-                else if (command.equals("SEND")) {
-                    Frame newFrame = new SENDframe(command, headers, bodyAsString, DB, connectionId);
-                    newFrame.process();
-                } else if (command.equals("SUBSCRIBE")) {
-                    Frame newFrame = new SUBSCRIBEframe(command, headers, bodyAsString, DB, connectionId);
-                    newFrame.process();
-                } else if (command.equals("UNSUBSCRIBE")) {
-                    Frame newFrame = new UNSUBSCRIBEframe(command, headers, bodyAsString, DB, connectionId);
-                    newFrame.process();
-                } else if (command.equals("DISCONNECT")) {
-                    Frame newFrame = new DISCONNECTframe(command, headers, bodyAsString, DB, connectionId);
-                    newFrame.process();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
+        //gets command
+        String command;
+        int i = 0;
+        if (words.get(0).length()==0) i = 1;
+        command = words.get(i);
+        // gets headers
+        HashMap<String, String> headers = new HashMap();
+        String header;
+        System.out.println("got the command: " + command);
+
+        while (i<words.size() && (words.get(i)).length()>0) {
+            header = words.get(i);
+            int index = header.indexOf(':');
+            if(index != -1) {
+                String key = header.substring(0, index);
+                String value = header.substring(index + 1, header.length());
+                headers.put(key.trim(), value.trim());
+                ;
             }
+            i++;
+        }
+        // gets rid of empty lines
+        while (i<words.size() && ((header = words.get(i)).length()==0)) {
+            String temp = words.get(i);
+            i++;
+        }
+
+        // gets body
+        String bodyAsString = "";
+        if(i<words.size()){
+            bodyAsString = bodyAsString + words.get(i) +'\n';
+        }
+        //     String bodyAsString = bufferedMessage.readLine();
+
+
+        if (command.equals("CONNECT")) {
+            Frame newFrame = new CONNECTframe(command, headers, bodyAsString, DB, connectionId);
+            newFrame.process();
+            //     login 127.0.0.1:7777 hillel 1234
+        }
+        else if (command.equals("SEND")) {
+            Frame newFrame = new SENDframe(command, headers, bodyAsString, DB, connectionId);
+            newFrame.process();
+        } else if (command.equals("SUBSCRIBE")) {
+            Frame newFrame = new SUBSCRIBEframe(command, headers, bodyAsString, DB, connectionId);
+            newFrame.process();
+        } else if (command.equals("UNSUBSCRIBE")) {
+            Frame newFrame = new UNSUBSCRIBEframe(command, headers, bodyAsString, DB, connectionId);
+            newFrame.process();
+        } else if (command.equals("DISCONNECT")) {
+            Frame newFrame = new DISCONNECTframe(command, headers, bodyAsString, DB, connectionId);
+            newFrame.process();
         }
     }
+
     public boolean shouldTerminate() { return shouldTerminate; }
 }
