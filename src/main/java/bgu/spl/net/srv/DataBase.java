@@ -27,7 +27,6 @@ public class DataBase<T> {
 
     public static DataBase getInstance(){ return SingletonHolder.dataBase;}
 
-
     public ConcurrentHashMap<String, ConcurrentLinkedQueue<User>> getTopicsMap() {
         return topicsMap;
     }
@@ -42,12 +41,15 @@ public class DataBase<T> {
     public ConcurrentHashMap<Integer, User> getUserIntegerMap() { return userIntegerMap; }
 
 
-    public synchronized int addUser(ConnectionHandler CH){
+    public int addUser(ConnectionHandler CH){
         int id = nextid.get();
-        clientsMap.put(id,CH);
-        nextid.incrementAndGet();
+        synchronized (clientsMap){
+            clientsMap.put(id,CH);
+            nextid.incrementAndGet();
+        }
         return id;
     }
+
     public int isUserExist(String userName){
             if (userStringMap.containsKey(userName)){
                 return  userStringMap.get(userName).getId();
