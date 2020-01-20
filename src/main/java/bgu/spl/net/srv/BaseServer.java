@@ -46,7 +46,7 @@ public abstract class BaseServer<T> implements Server<T> {
                         clientSock,
                         encdecFactory.get(),
                         protocolFactory.get(), connections);
-                int connectionId = DB.addUser(handler);
+                int connectionId = handler.getConnectionID();
                 protocol.start( connectionId, connections);
                 execute(handler);
             }
