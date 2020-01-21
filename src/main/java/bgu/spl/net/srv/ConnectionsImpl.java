@@ -50,6 +50,7 @@ public class ConnectionsImpl<T> implements Connections<T> {
                 while (index < size) {
                     User user = topicSubsQueue.poll();
                     send(user.getId(), msg);
+                    System.out.println(msg);
                     index++;
                     topicSubsQueue.add(user);
                 }
