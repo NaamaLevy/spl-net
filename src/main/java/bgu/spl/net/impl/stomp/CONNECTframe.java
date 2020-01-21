@@ -18,7 +18,7 @@ public class CONNECTframe extends Frame{
         ConnectionsImpl connections = ConnectionsImpl.getInstance();
         String userName = getHeaders().get("login");
         String password = getHeaders().get("passcode");
-        String version = getHeaders().get("version");
+        String version = getHeaders().get("accept-version");
         int exist = DB.isUserExist(userName);
         //check conditions for action
         if (exist == -2){//new user //TODO: done!
@@ -26,7 +26,7 @@ public class CONNECTframe extends Frame{
             newUser.setPassword(password);
             newUser.setUserName(userName);
             System.out.println("created new user with name: " + userName +"   password: "+password);
-            DB.getUserStringMap().put(userName, newUser);
+                       DB.getUserStringMap().put(userName, newUser);
             DB.getUserIntegerMap().put(connectionId,newUser); //TODO naama, this is the new map i've told you about. needs to be removed when disconnect - DONE!!!
             // CONNECTED frame to the client and the client will print "Login successful”.
             connections.send(connectionId, buildCONNECTED(version)); // sends RECEIPT to the user

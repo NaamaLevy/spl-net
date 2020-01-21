@@ -31,6 +31,7 @@ public class StompMessagingProtocolImpl implements StompMessagingProtocol<String
 
     public void start(int connectionId, Connections<String> connections) {
         this.connectionId = connectionId;
+        this. connections = connections;
     }
 
 

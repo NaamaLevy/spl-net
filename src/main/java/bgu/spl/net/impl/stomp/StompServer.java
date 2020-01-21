@@ -9,7 +9,7 @@ public class StompServer {
     public static void main(String[] args) {
 
 //        if(args[1] =="tpc"){
-            Server.threadPerClient(8888,
+            Server.threadPerClient(7777,
                     ()-> new StompMessagingProtocolImpl(),
                     STOMPMessageEncoderDecoder::new).serve();
 //        }
