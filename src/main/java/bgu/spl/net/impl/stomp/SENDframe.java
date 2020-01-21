@@ -9,11 +9,11 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class SENDframe extends Frame{
-    AtomicInteger messageid;
+
 
     public SENDframe(String command, HashMap<String , String> headers, String body, DataBase DB, int connectionId) {
         super(command,  headers, body, DB, connectionId);
-        messageid = new AtomicInteger(0);
+
     }
 
     public void process(){
@@ -28,10 +28,11 @@ public class SENDframe extends Frame{
                 break;
             }
         }
-        connections.send(destination, buildMESSAGE(destination, subid, messageid, body)); // sends RECEIPT to the user
+        int messageID = DB.getMessageid();
+        connections.send(destination, buildMESSAGE(destination, subid, messageID, body)); // sends RECEIPT to the user
     }
 
-    private String buildMESSAGE(String destination, int subID, AtomicInteger messageid, String body){
+    private String buildMESSAGE(String destination, int subID, int messageid, String body){
         // CONNECTED frame to the client and the client will print "Login successful”.
         String command = "MESSAGE";
         char newLine = '\n';

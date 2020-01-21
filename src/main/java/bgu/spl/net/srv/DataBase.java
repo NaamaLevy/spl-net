@@ -12,6 +12,7 @@ public class DataBase<T> {
     private ConcurrentHashMap<String, User> userStringMap; // <userName, user>
     private ConcurrentHashMap<Integer, User> userIntegerMap;  //<connectionId, user>
     AtomicInteger nextid;
+    AtomicInteger messageid;
 
     private static class SingletonHolder {
         private static DataBase dataBase = new DataBase();
@@ -19,10 +20,15 @@ public class DataBase<T> {
 
     private DataBase(){
         nextid = new AtomicInteger(0);
+        messageid = new AtomicInteger(0);
         topicsMap = new ConcurrentHashMap<>();
         clientsMap = new ConcurrentHashMap<>();
         userStringMap = new ConcurrentHashMap<>();
         userIntegerMap = new ConcurrentHashMap<>();
+    }
+
+    public int getMessageid() {
+        return messageid.incrementAndGet();
     }
 
     public static DataBase getInstance(){ return SingletonHolder.dataBase;}
