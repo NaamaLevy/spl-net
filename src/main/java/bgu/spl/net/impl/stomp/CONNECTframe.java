@@ -32,7 +32,7 @@ public class CONNECTframe extends Frame{
             connections.send(connectionId, buildCONNECTED(version)); // sends RECEIPT to the user
         }
 
-        if (exist == -1){//logged out //TODO: done!
+        else if (exist == -1){//logged out //TODO: done!
             if (((User) DB.getUserStringMap().get(userName)).getPassword() == password){
                 ((User) DB.getUserStringMap().get(userName)).setId(connectionId);
                 DB.getUserIntegerMap().put(connectionId, DB.getUserStringMap().get(userName));

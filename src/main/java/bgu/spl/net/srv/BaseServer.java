@@ -45,7 +45,7 @@ public abstract class BaseServer<T> implements Server<T> {
                 BlockingConnectionHandler<T> handler = new BlockingConnectionHandler(
                         clientSock,
                         encdecFactory.get(),
-                        protocolFactory.get(), connections);
+                       protocol, connections);
                 int connectionId = handler.getConnectionID();
                 protocol.start( connectionId, connections);
                 execute(handler);

@@ -14,7 +14,7 @@ public class DISCONNECTframe extends Frame{
 
     public void process(){
         Connections connections = ConnectionsImpl.getInstance();
-        connections.disconnect(connectionId);
         connections.send(connectionId, buildRECEIPT(connectionId)); // sends RECEIPT to the user
+        connections.disconnect(connectionId);
     }
 }

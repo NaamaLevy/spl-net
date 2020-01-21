@@ -52,6 +52,9 @@ public class BlockingConnectionHandler<T> implements Runnable, ConnectionHandler
                 T nextMessage = encdec.decodeNextByte((byte) read);
                 if (nextMessage != null) {
                     protocol.process((String) nextMessage);
+                    if(protocol.shouldTerminate()){
+                        close();
+                    }
 //                    if (response != null) {
 //                        out.write(encdec.encode(response));
 //                        out.flush();
@@ -69,6 +72,7 @@ public class BlockingConnectionHandler<T> implements Runnable, ConnectionHandler
     @Override
     public void close() throws IOException {
         connected = false;
+        protocol.setShouldTerminate(true);
         sock.close();
     }
 

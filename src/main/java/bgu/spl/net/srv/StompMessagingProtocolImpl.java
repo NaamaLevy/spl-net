@@ -28,14 +28,14 @@ public class StompMessagingProtocolImpl implements StompMessagingProtocol<String
         DB = DataBase.getInstance();
     }
 
-
+    @Override
     public void start(int connectionId, Connections<String> connections) {
         this.connectionId = connectionId;
         this. connections = connections;
     }
 
-
-    public void process(String message) throws IOException {
+    @Override
+    public void process(String message)  {
 
         List<String> words = new ArrayList<>(Arrays.asList(message.split("\n")));
 
@@ -95,6 +95,11 @@ public class StompMessagingProtocolImpl implements StompMessagingProtocol<String
             newFrame.process();
         }
     }
-
+    @Override
     public boolean shouldTerminate() { return shouldTerminate; }
+
+
+    public void setShouldTerminate(boolean b) {
+
+    }
 }
