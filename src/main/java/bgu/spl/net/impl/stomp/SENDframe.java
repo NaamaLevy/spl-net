@@ -37,6 +37,6 @@ public class SENDframe extends Frame{
         String command = "MESSAGE";
         char newLine = '\n';
         char close = '\u0000';
-        return command + newLine + "subscription: " + subID + newLine + "Message-id: " + messageid + newLine + "destination: " + destination + newLine + newLine+ body +newLine+newLine+newLine+close;
+        return command + newLine + "subscription:" + subID + newLine + "Message-id:" + messageid + newLine + "destination:" + destination + newLine + newLine+ body +newLine+newLine+newLine+close;
     }
 }

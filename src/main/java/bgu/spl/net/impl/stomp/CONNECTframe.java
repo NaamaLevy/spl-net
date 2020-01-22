@@ -59,6 +59,6 @@ public class CONNECTframe extends Frame{
     private String buildERROR(String version, String message){
         char newLine = '\n';
         char close = '\u0000';
-        return "ERROR" + newLine + "receipt-id: message" + version + newLine + "message: " + message + newLine+newLine+newLine+close;
+        return "ERROR" + newLine + "receipt-id:message" + version + newLine + "message:" + message + newLine+newLine+newLine+close;
     }
 }
