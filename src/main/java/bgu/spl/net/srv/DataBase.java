@@ -50,11 +50,11 @@ public class DataBase<T> {
 
     public int addUser(ConnectionHandler CH){
         int id = nextid.get();
+        nextid.getAndIncrement();
         synchronized (clientsMap){
             clientsMap.put(id,CH);
-            nextid.incrementAndGet();
         }
-        return id;
+        return id ;
     }
 
     public int isUserExist(String userName){

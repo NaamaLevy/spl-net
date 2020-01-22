@@ -11,7 +11,6 @@ import java.util.concurrent.ConcurrentHashMap;
 public class SUBSCRIBEframe extends Frame{
 
     String topicToSubscribe;
-    int connectionId;
     int topicId;
     int receiptId;
 
@@ -26,7 +25,7 @@ public class SUBSCRIBEframe extends Frame{
         receiptId = Integer.parseInt(headers.get("receipt"));
         //subscribe user to topic
         DB.subscribeUser(connectionId, topicToSubscribe,topicId);
-        System.out.println("subscribed "+DB.getUserByConnectionId(connectionId).getUserName() +" to " + topicToSubscribe);
+        System.out.println("subscribed "+((User)DB.getUserIntegerMap().get(connectionId)).getUserName() +" to " + topicToSubscribe);
         //return to user RECEIPT for this frame
         connections.send(connectionId, buildRECEIPT(receiptId)); // sends RECEIPT to the user
     }

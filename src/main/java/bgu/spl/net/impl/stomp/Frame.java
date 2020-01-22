@@ -18,6 +18,7 @@ public class Frame {
             this.headers = header;
             this.body = body;
             this.DB = DB;
+            this.connectionId = connectionId;
         }
 
     public HashMap<String, String> getHeaders() {

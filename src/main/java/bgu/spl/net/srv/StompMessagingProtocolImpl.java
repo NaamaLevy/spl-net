@@ -70,13 +70,15 @@ public class StompMessagingProtocolImpl implements StompMessagingProtocol<String
 
         // gets body
         String bodyAsString = "";
-        if(i<words.size()){
-            bodyAsString = bodyAsString + words.get(i) +'\n';
+        while(i<words.size()){
+            bodyAsString = bodyAsString + words.get(i) +" ";
+            i++;
         }
         //     String bodyAsString = bufferedMessage.readLine();
 
 
         if (command.equals("CONNECT")) {
+            System.out.println("got CONNECT");
             Frame newFrame = new CONNECTframe(command, headers, bodyAsString, DB, connectionId);
             newFrame.process();
             //     login 127.0.0.1:7777 hillel 1234

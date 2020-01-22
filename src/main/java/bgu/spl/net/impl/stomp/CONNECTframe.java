@@ -10,6 +10,7 @@ import java.util.HashMap;
 public class CONNECTframe extends Frame{
 
     public CONNECTframe(String command, HashMap<String , String> headers, String body, DataBase DB, int connectionId) {
+
         super(command,  headers, body, DB, connectionId);
 
     }
@@ -25,9 +26,9 @@ public class CONNECTframe extends Frame{
             User newUser = new User((ConnectionHandler) DB.getClientsMap().get(connectionId), connectionId);
             newUser.setPassword(password);
             newUser.setUserName(userName);
-            System.out.println("created new user with name: " + userName +"   password: "+password);
+            System.out.println("created new user with name: " + userName +"   password: "+password +"     id: "+ connectionId);;
                        DB.getUserStringMap().put(userName, newUser);
-            DB.getUserIntegerMap().put(connectionId,newUser); //TODO naama, this is the new map i've told you about. needs to be removed when disconnect - DONE!!!
+            DB.getUserIntegerMap().put(connectionId,newUser); //
             // CONNECTED frame to the client and the client will print "Login successful”.
             connections.send(connectionId, buildCONNECTED(version)); // sends RECEIPT to the user
         }
@@ -54,6 +55,7 @@ public class CONNECTframe extends Frame{
         String header = "version:";
         char newLine = '\n';
         char close = '\u0000';
+        System.out.println("sending CONNECTED");
         return command+newLine+header+version+newLine+newLine+newLine+close;
     }
     private String buildERROR(String version, String message){
